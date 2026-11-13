@@ -42,11 +42,10 @@ int main(int argc, char* argv[])
         printf("Average: %2.1fF", averages);
         fclose(FH);
     }
-    printf("Program finished. Exiting...");
-    gpioWrite(PIN, 0); //LED ON
+    FH = freopen("/dev/tty", "r", stdout);
     gpioTerminate(); // Terminates the program
     exit(0);
-
+    
     return 0; 
 }
 
@@ -62,11 +61,7 @@ int GatherReadings(float readings[])
         printf("Please enter temperature #%d: ", size+1);
         fgets(readingsArr, sizeof(readingsArr), stdin);
         IsQuit = toupper(readingsArr[0]);
-        if(IsQuit == 'Q' && size == 0)
-        {
-            printf("\nYou can't quit before entering a temperature!");
-        }
-        else if(atof(readingsArr) != 0.0)
+        if(atof(readingsArr) != 0.0)
         {
             readings[size] = atof(readingsArr);
             size++;
@@ -76,7 +71,15 @@ int GatherReadings(float readings[])
             printf("Please enter a temperature\n");
         }
     }
-    printf("\nAll temperatures have been receieved!\n\n");
+    if(size == 0)
+    {
+        printf("No temperatures entered. Exting...\n\n");
+    }
+    else
+    {
+        printf("\nAll temperatures have been receieved!\n\n");
+    }
+    
     return size;
 }
 
