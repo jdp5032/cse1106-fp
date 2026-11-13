@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <pigpio.h>
+#include <pigpio.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     gpioWrite(PIN, 0); //LED ON
     gpioTerminate(); // Terminates the program
     exit(0);
-    
+
     return 0; 
 }
 
