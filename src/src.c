@@ -14,6 +14,9 @@ float calculatAverages(float[], int);
 
 int main(int argc, char* argv[])
 {
+    gpioInitialise();
+    gpioSetMode(PIN, PI_OUTPUT);
+    gpioWrite(PIN,0); // LED Off
     char input[100] = {};
     char letter = ' ';
 
@@ -21,7 +24,7 @@ int main(int argc, char* argv[])
     int ranges[10] = {};
     
     FILE *FH;
-    FH = fopen(argv[1], "r");
+    FH = fopen("../status.txt", "r");
     
     int size = GatherReadings(readings); // Prints to terminal
     isInRange(readings, ranges, size); // Sets ranges to its numbers
@@ -33,25 +36,17 @@ int main(int argc, char* argv[])
     else
     {
         fclose(FH);
-        FH = freopen(argv[1], "w", stdout);
+        FH = freopen("../status.txt", "w", stdout);
         DisplayStatus(readings, ranges, size); // Prints to file 
         float averages = calculatAverages(readings, size);
-        printf("Average: %2.1f", averages);
+        printf("Average: %2.1fF", averages);
         fclose(FH);
     }
-    
     printf("Program finished. Exiting...");
+    gpioWrite(PIN, 0); //LED ON
+    gpioTerminate(); // Terminates the program
     exit(0);
     
-    /*
-    gpioInitialise();
-    gpioSetMode(PIN, PI_OUTPUT);
-    gpioWrite(PIN, 1); //LED ON
-    getchar(); // Waits for Enter key
-    gpioWrite(PIN,0); // LED Off
-    getchar(); // Waits for enter key
-    gpioTerminate(); // Terminates the program
-    */
     return 0; 
 }
 
@@ -111,6 +106,7 @@ void DisplayStatus(float readings[], int ranges[], int size)
         else
         {
             printf("%2.1fF\tWARNING\tON\n", readings[i]);
+            gpioWrite(PIN, 1); //LED ON
         }
     }
 }
