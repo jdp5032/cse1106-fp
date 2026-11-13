@@ -42,7 +42,11 @@ int main(int argc, char* argv[])
         printf("Average: %2.1fF", averages);
         fclose(FH);
     }
-    FH = freopen("/dev/tty", "r", stdout);
+    freopen("/dev/tty", "w", stdout);
+    freopen("/dev/tty", "r", stdin);
+    printf("Press enter to quit program...");
+    getchar();
+    gpioWrite(PIN,0);
     gpioTerminate(); // Terminates the program
     exit(0);
     
